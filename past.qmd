@@ -184,7 +184,7 @@ fireChart <-
   ggplot(data = annualFire, aes(x = BPS_NAME, y = acres)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Average Annual Acres Burned Prior to European Colonization” ",
+    title = "Average Annual Acres Burned Prior to European Colonization ",
     subtitle = "Per Biophysical Setting",
     caption = "\nData from landfire.gov",
     x = "",
