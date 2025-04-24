@@ -9,6 +9,7 @@ library(igraph)
 library(readr)
 library(tidygraph)
 library(tidyverse)
+library(DT)
 
 ```
 
@@ -24,7 +25,7 @@ Using LANDFIRE’s BpS products, we explore two different ways to visualize past
 
 *Note: number presented when hovering equals acres.*
 
-**PAST** &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp;&emsp; &emsp; &emsp;&emsp; &emsp;**CURRENT**
+**PAST** &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp;&emsp; &emsp; **CURRENT**
 
 ```{r chord, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 # read in data
@@ -98,28 +99,28 @@ htmlwidgets::saveWidget(chord,
 ## Succession classes for most dominant Biophysical Settings
 
 
-Some ecosystems have sizable over/under-representation of succession classes on the landscape today compared to modeled historic. For example:
 
-* There is a substantial 'over-representation' of succession class D in the Boreal Acid Peatland.
-* LANDFIRE mapped almost total lack of succession classes A, B and C with the Boreal White Spruce-Fir-Hardwood-Inland ecosystem.
-* As is seen in most northern hardwood forests the late-closed succession class D was dominant historically, and way under-represented on the landscape today.
 
 
 ```{r scls chart, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=9}
 
-BPS_SCLS2 <- read.csv("data/bpsScls2.csv")
+scls_descriptions <- read_csv("data/scls_descriptions.csv") |>
+  unite(model_label, c("StratumID", "ClassLabelID"), remove = FALSE)
+
+BPS_SCLS2 <- read.csv("data/bpsScls2.csv") 
 
 bps_scls_3 <- BPS_SCLS2 %>%
   group_by(Var1) %>%
   mutate(total.count = sum(Freq)) %>%
   ungroup() %>%
   dplyr::filter(dense_rank(desc(total.count)) < 8) %>%
-  dplyr::select(c("bps_name", "ref_label",  "currentPercent", "ref_percent")) %>%
+  dplyr::select(c("bps_name", "ref_label",  "currentPercent", "ref_percent", "model_label")) %>%
   pivot_longer(
     cols = c(`ref_percent`, `currentPercent`), 
     names_to = "refCur", 
     values_to = "Percent"
-    )
+    ) |>
+  left_join(scls_descriptions)
 
 
 
@@ -147,7 +148,7 @@ sclasplot <-
   scale_x_discrete(limits = (levels(bps_scls_3$ref_label))) +
   labs(
     title = "Succession Classes past and present",
-    subtitle = "2 BpSs selected for illustration. Not all succession classes present in all BpSs",
+    subtitle = "Top BpSs selected for illustration. Not all succession classes present in all BpSs",
     caption = "\nData from landfire.gov.",
     x = "",
     y = "Percent")+
@@ -167,5 +168,55 @@ sclasplot <-
 sclasplot
 
 ```
+
+## Succession Class Descriptions
+
+Below is a table of the Succession Class descriptions for the Biophysical Settings charted above.  For complete Biophysical Settings descriptions see links on Past page. 
+
+
+```{r}
+#| label: sclass descriptions
+#| echo: false
+#| message: false
+#| warning: false
+
+
+for_scl_table <-  bps_scls_3 |>
+  filter(across(everything(), ~ !is.na(.x))) |>
+  filter(str_detect(refCur, "ref")) |>
+  select(c(bps_name,
+           ref_label,
+           StateClassID,
+           Description
+           )) |>
+  distinct(Description, .keep_all = TRUE) |>
+  rename(c('Biophysical Setting' = bps_name,
+           'Class' = ref_label,
+           'Class Label' = StateClassID,
+           ))
+
+
+# Render the table with DT
+datatable(for_scl_table, options = list(
+  columnDefs = list(list(
+    targets = 3, # Index of the Description column (0-based)
+    render = JS("function(data, type, row, meta) {
+      return type === 'display' && data.length > 50 ? 
+        '<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;
+    }")
+  )),
+  #scrollX = TRUE,
+  autoWidth = TRUE
+))
+
+
+
+
+
+```
+
+
+
+
 
 

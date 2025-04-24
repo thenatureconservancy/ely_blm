@@ -138,8 +138,8 @@ evcChart <-
   labs(
     title = "Existing Vegetation Cover",
     caption = "Data from landfire.gov",
-    x = "Amount of landscape",
-    y = "Most dominant lifeform") +
+    x = "",
+    y = "Percent of landscape") +
   scale_fill_identity() +
   coord_flip() +
   theme_classic(base_size = 12)+

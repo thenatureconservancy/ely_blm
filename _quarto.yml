@@ -18,14 +18,17 @@ website:
         text: Comparing
       - href: about.qmd
         text: About
-
+        
 format:
   html:
     theme: 
-      light: flatly
       dark: darkly
-    css: styles.css
+      light: flatly
+    css:
+      - styles-darkly.css
+      - styles-flatly.css
     toc: true
 
 editor: source
+
 

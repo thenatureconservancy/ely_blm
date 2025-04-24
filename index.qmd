@@ -18,7 +18,7 @@ We will use [LANDFIRE](https://landfire.gov/){target="blank"} products to:
 3. Summarize patterns of change and management opportunities.
 
 
-The following charts, maps, and graphs are based on current LANDFIRE products, and provide a starting point for further analysis.
+The following charts, maps, and graphs are based on 2023 LANDFIRE products, and provide a starting point for further analysis.
 
 
 This demonstration will:
