@@ -27,8 +27,7 @@ LANDFIRE's [Existing Vegetation Type, Cover and Height](https://landfire.gov/veg
 
 
 ```{r evt chart, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
-#| eval: false
-#| include: false
+#| echo: false
 evtname <- read_csv(file = "data/evt_aoi_attributes.csv") |> 
   group_by(EVT_NAME) |> 
   summarize(ACRES = sum(ACRES),
@@ -142,7 +141,7 @@ evcChart <-
     y = "Percent of landscape") +
   scale_fill_identity() +
   coord_flip() +
-  theme_classic(base_size = 12)+
+  theme_classic(base_size = 14) +
   theme(legend.position = "none") 
 
 
@@ -226,12 +225,12 @@ ggplot(data = evhgroup, aes(x = label, y = rel_percent, fill = colors)) +
   labs(
     title = "Existing Vegetation Height",
     subtitle = "",
-    caption = "\nData from landfire.gov.",
+    caption = "\nData from landfire.gov",
     x = "",
     y = "Percent of landscape") +
   scale_fill_identity() +
   coord_flip() +
-  theme_bw()
+  theme_classic(base_size = 14)
 
 evhChart
 

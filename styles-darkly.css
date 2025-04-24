@@ -1,50 +1,27 @@
-
-
-
-/* Change table text color to white and background color to dark gray for Darkly theme */
-table.dataTable {
-  color: #ffffff;
-  background-color: #333333;
+/* Custom CSS for DataTable */
+.dataTables_wrapper {
+  background-color: white;
+  color: black;
 }
 
-table.dataTable th,
-table.dataTable td {
-  color: #ffffff;
-}
-
-/* Change text color for search and show elements */
-.dataTables_wrapper .dataTables_filter label,
-.dataTables_wrapper .dataTables_length label {
-  color: #ffffff;
-}
-
-.dataTables_wrapper .dataTables_filter input,
-.dataTables_wrapper .dataTables_length select {
-  color: #ffffff;
-  background-color: #444444; /* Slightly lighter background for better contrast */
-  border: 1px solid #ffffff; /* Add border for better visibility */
-  padding: 5px; /* Add padding for better visibility */
-}
-
-/* Ensure dropdown and input text are visible */
-.dataTables_wrapper .dataTables_filter input,
-.dataTables_wrapper .dataTables_length select {
-  color: #ffffff;
-  background-color: #444444; /* Slightly lighter background for better contrast */
-  border: 1px solid #ffffff; /* Add border for better visibility */
-  padding: 5px; /* Add padding for better visibility */
-}
-
-/* Additional styling for search and show elements */
+.dataTables_wrapper .dataTables_length,
 .dataTables_wrapper .dataTables_filter,
-.dataTables_wrapper .dataTables_length {
-  color: #ffffff;
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  color: black;
 }
 
-/* Specifically target the text color for Show entries and Search elements */
-.dataTables_wrapper .dataTables_filter label,
-.dataTables_wrapper .dataTables_length label,
-.dataTables_wrapper .dataTables_filter input,
-.dataTables_wrapper .dataTables_length select {
-  color: #ffffff !important; /* Force text color to white */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  background-color: white;
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background-color: #ddd;
+  color: black;
 }

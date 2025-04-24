@@ -152,7 +152,7 @@ sclasplot <-
     caption = "\nData from landfire.gov.",
     x = "",
     y = "Percent")+
-  theme_minimal(base_size = 12)+
+  theme_minimal(base_size = 14)+
   theme(plot.caption = element_text(hjust = 0, face= "italic"), #Default is hjust=1
         plot.title.position = "plot", #NEW parameter. Apply for subtitle too.
         plot.caption.position =  "plot") +
@@ -171,7 +171,9 @@ sclasplot
 
 ## Succession Class Descriptions
 
-Below is a table of the Succession Class descriptions for the Biophysical Settings charted above.  For complete Biophysical Settings descriptions see links on Past page. 
+Below is a table of the Succession Class descriptions for the Biophysical Settings charted above.  For complete Biophysical Settings descriptions see links on [Past](./past.html){target='blank'} page. 
+
+
 
 
 ```{r}
@@ -195,7 +197,6 @@ for_scl_table <-  bps_scls_3 |>
            'Class Label' = StateClassID,
            ))
 
-
 # Render the table with DT
 datatable(for_scl_table, options = list(
   columnDefs = list(list(
@@ -206,9 +207,9 @@ datatable(for_scl_table, options = list(
     }")
   )),
   #scrollX = TRUE,
-  autoWidth = TRUE
+  autoWidth = TRUE,
+  lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')) # Add options for 5, 10, and all entries
 ))
-
 
 
 

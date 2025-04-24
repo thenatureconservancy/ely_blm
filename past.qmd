@@ -44,7 +44,7 @@ bpsChart <-
   labs(
     title = "Top 10 Biophysical Settings",
     subtitle = "Represents dominant vegetation systems pre-European colonization",
-    caption = "Data from landfire.gov.",
+    caption = "Data from landfire.gov",
     x = "",
     y = "Percent of landscape") +
   scale_x_discrete(limits = rev(bpsname$BPS_NAME),
@@ -186,7 +186,7 @@ fireChart <-
   labs(
     title = "Average Annual Acres Burned Prior to European Colonization” ",
     subtitle = "Per Biophysical Setting",
-    caption = "\nData from landfire.gov.",
+    caption = "\nData from landfire.gov",
     x = "",
     y = "Acres") +
   scale_x_discrete(limits = rev(annualFire$BPS_NAME),

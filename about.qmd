@@ -62,10 +62,17 @@ A [Biophysical Setting (BpS)](https://landfire.gov/bps-models.php){target="blank
 <br>
 
 
-## Still have questions? LANDFIRE is here to help. 
+<h2>Questions? LANDFIRE is here to help</h2>
 
-Ask the [LANDFIRE Helpdesk](mailto:helpdesk@landfire.gov){target="blank"} 
+* Get in touch with [TNC Ecologist, Randy Swaty,](mailto:rswaty@tnc.org) (Landscape assessment creator and TNC Ecologist)
 
-Search the [LANDFIRE Helpdesk Dashboard](https://landfire.gov/helpdesk ){target="blank"} (see what others are asking and find solutions to common problems) 
+* Ask the [LANDFIRE Helpdesk](mailto:helpdesk@landfire.gov)
 
-Search (& subscribe to) the [LANDFIRE YouTube Channel](https://www.youtube.com/@LANDFIREvideo){target="blank} (see tutorials, Office Hours, quick demonstrations) 
+* Search (& subscribe to) the [LANDFIRE YouTube Channel](https://www.youtube.com/@LANDFIREvideo) (see tutorials, Office Hours, quick demonstrations)
+
+* See how others are [putting LANDFIRE products to work](https://arcg.is/1jmKm90)
+
+* [Join the LANDFIRE Newsletter 2-min read](http://eepurl.com/cajG91)
+
+* Check out our other [LANDFIRE-Powered Assessments Hub](https://landfire-tnc.github.io/Assessments/)
+
