@@ -4,7 +4,7 @@ title: "Present: Current Ecosystem Conditions"
 
 ```{r include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
-
+library(scales)
 ```
 
 LANDFIRE's [Existing Vegetation Type, Cover and Height](https://landfire.gov/vegetation.php){target="blank"} datasets describe vegetation conditions.
@@ -21,34 +21,47 @@ LANDFIRE's [Existing Vegetation Type, Cover and Height](https://landfire.gov/veg
 <br>
 
 ![](images/evt.jpg){width="100%"}
-
+*Existing Vegetation Types with minor representation removed from map and chart below for clarity.  May differ from Biophysical Settings due to different classification and/or conditions on the ground.*
 <br>
 
 
 
 ```{r evt chart, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
 #| echo: false
-evtname <- read_csv(file = "data/evt_aoi_attributes.csv") |> 
-  group_by(EVT_NAME) |> 
+
+evt_data <- read_csv("data/evt_aoi_attributes.csv")
+
+# Read the data from the CSV file without column names
+evt_qgis_list <- read_csv("data/evt_qgis.clr", col_names = FALSE)
+
+# Remove numbers and extract unique ecosystems
+evt_qgis_list <- evt_qgis_list %>%
+  mutate(ecosystem = str_remove_all(X1, "^\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+")) %>%
+  distinct(ecosystem)
+
+# Assuming evt_data is already loaded
+evtname <- evt_data %>%
+  filter(EVT_NAME %in% evt_qgis_list$ecosystem) %>%
+  group_by(EVT_NAME) %>%
   summarize(ACRES = sum(ACRES),
-            REL_PERCENT = sum(REL_PERCENT)) |> 
-  arrange(desc(REL_PERCENT)) |> 
-  filter(!EVT_NAME %in% c("Open Water","Developed-Roads")) |> 
+            REL_PERCENT = sum(REL_PERCENT)) %>%
+  arrange(desc(REL_PERCENT)) %>%
   top_n(n = 10, wt = REL_PERCENT)
 
 # plot
 evtChart <-
-  ggplot(data = evtname, aes(x = EVT_NAME, y = REL_PERCENT)) +
+  ggplot(data = evtname, aes(x = EVT_NAME, y = ACRES)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Top 10 Existing Vegetation Types",
+    title = "Top Existing Vegetation Types",
     caption = "Data from landfire.gov",
     x = "",
     y = "Percent of landscape") +
   scale_x_discrete(limits = rev(evtname$EVT_NAME),
                    labels = function(x) str_wrap(x, width = 18)) +
   coord_flip() +
-  theme_bw(base_size = 14)
+  theme_bw(base_size = 14) +
+  scale_y_continuous(labels = comma)
 
 
 
@@ -132,17 +145,18 @@ evcgroup <- evcgroup %>%
 
 # plot
 evcChart <-
-  ggplot(data = evcgroup, aes(x = label, y = rel_percent, fill = colors)) +
+  ggplot(data = evcgroup, aes(x = label, y = acres, fill = colors)) +
   geom_bar(stat = "identity") +
   labs(
     title = "Existing Vegetation Cover",
     caption = "Data from landfire.gov",
     x = "",
-    y = "Percent of landscape") +
+    y = "Acres") +
   scale_fill_identity() +
   coord_flip() +
   theme_classic(base_size = 14) +
-  theme(legend.position = "none") 
+  theme(legend.position = "none") +
+  scale_y_continuous(labels = comma)
 
 
 evcChart
@@ -220,17 +234,18 @@ evhgroup <- evhgroup %>%
 
 # plot
 evhChart <-
-ggplot(data = evhgroup, aes(x = label, y = rel_percent, fill = colors)) +
+ggplot(data = evhgroup, aes(x = label, y = acres, fill = colors)) +
   geom_bar(stat = "identity") +
   labs(
     title = "Existing Vegetation Height",
     subtitle = "",
     caption = "\nData from landfire.gov",
     x = "",
-    y = "Percent of landscape") +
+    y = "Acres") +
   scale_fill_identity() +
   coord_flip() +
-  theme_classic(base_size = 14)
+  theme_classic(base_size = 14) +
+  scale_y_continuous(labels = comma)
 
 evhChart
 

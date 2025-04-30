@@ -16,7 +16,7 @@ Use this page as a starting point to explore the most prevalent BpSs for your an
 <br>
 
 ![](images/bps.jpg){width=100%}
-
+*Biophysical Settings with minor representation removed from map and chart below for clarity*
 <br>
 <br>
 
@@ -30,27 +30,51 @@ library(DT)
 
 bps_data <- read.csv("data/bps_aoi_attributes.csv")
 
+
+# Read the data from the CSV file without column names
+bps_qgis_list <- read_csv("data/bps_qgis.clr", col_names = FALSE)
+
+# Remove numbers and extract unique ecosystems
+bps_qgis_list <- bps_qgis_list %>%
+ mutate(bps = str_remove_all(X1, "^\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+")) %>%
+ distinct(bps)
+
+
+# Read the data from the CSV file without column names
+bps_qgis_list <- read_csv("data/bps_qgis.clr", col_names = FALSE)
+
+# Remove numbers and extract unique ecosystems
+bps_qgis_list <- bps_qgis_list %>%
+  mutate(ecosystem = str_remove_all(X1, "^\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+\\d+\\s+")) %>%
+  distinct(ecosystem)
+
+# Assuming bps_data is already loaded
 bpsname <- bps_data %>%
+  filter(BPS_NAME %in% bps_qgis_list$ecosystem) %>%
   group_by(BPS_NAME) %>%
   summarize(ACRES = sum(ACRES),
             REL_PERCENT = sum(REL_PERCENT)) %>%
   arrange(desc(REL_PERCENT)) %>%
   top_n(n = 10, wt = REL_PERCENT)
 
+
+
 # plot
 bpsChart <- 
-  ggplot(data = bpsname, aes(x = BPS_NAME, y = REL_PERCENT)) +
+  ggplot(data = bpsname, aes(x = BPS_NAME, y = ACRES)) +
   geom_bar(stat = "identity") +
   labs(
-    title = "Top 10 Biophysical Settings",
+    title = "Top Biophysical Settings from map",
     subtitle = "Represents dominant vegetation systems pre-European colonization",
     caption = "Data from landfire.gov",
     x = "",
-    y = "Percent of landscape") +
+    y = "Acres") +
   scale_x_discrete(limits = rev(bpsname$BPS_NAME),
                    labels = function(x) str_wrap(x, width = 18)) +
   coord_flip() +
-  theme_bw(base_size = 14)
+  theme_bw(base_size = 14) +
+  scale_y_continuous(labels = comma) 
+
 
 
 bpsChart
@@ -58,7 +82,7 @@ bpsChart
 
 ## Associated Biophysical Settings descriptions
 
-Below you will find a list of Biophysical Settings (BpS) that is linked to their descriptions.  Note:
+Below you will find a list of Biophysical Settings (BpS) in the map and chart  linked to their descriptions.  Note:
 
 * There may be multiple BpS names listed.  If so, this is because your landscape spans multiple LANDFIRE Map Zones and has multiple 'variants' for those BPSs.  
 * The names below are followed by a number in parentheses.  The first 5-digit number is the BPS Code.  The following numbers reprent the Map Zones.  For example, "13020_65_66" is ‘Laurentian-Acadian Northern Hardwoods forest’ BpS (13020) in Map Zones 65 and 66.
@@ -117,6 +141,9 @@ tm_shape(map_zones) +
 library(htmltools)
 library(dplyr)
 
+
+
+
 # Get unique model codes for the top 10 BPS names
 unique_model_codes <- unique(bps_data$BPS_MODEL[bps_data$BPS_NAME %in% bpsname$BPS_NAME])
 
@@ -127,11 +154,16 @@ bps_urls <- bps_data %>%
   select(c(BPS_NAME, BPS_MODEL))
 
 
+
 # Merge top_bps with bps_urls to get REL_PERCENT
 bps_urls <- bps_urls %>%
   left_join(bps_data |>
               select(BPS_MODEL, REL_PERCENT), 
             by = "BPS_MODEL")
+
+bps_urls <- bps_urls |>
+  group_by(BPS_NAME, BPS_MODEL) |>
+  summarize(REL_PERCENT = sum(REL_PERCENT))
 
 # URL template
 url_template <- "https://github.com/rswaty/bps_docs_parse/raw/main/all_bps_docs/10080_1_2_3_7.docx"
@@ -274,10 +306,10 @@ bpsChart <-
 bscols(widths = c(3, 12),
        tags$style(HTML("
   .selectize-input {
-    font-size: 28px;
+    font-size: 18px;
   }
   .selectize-dropdown {
-    font-size: 20px;
+    font-size: 18px;
   }
 ")),
 
